@@ -21,4 +21,23 @@ use Illuminate\Support\Facades\Route;
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
-Route::middleware('auth:sanctum')->post('/logout', [AuthController::class, 'logout']);
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/logout', [AuthController::class, 'logout']);
+});
+Route::group(['prefix' => 'forum-group'], function () {
+    Route::get('/forum', function () {
+        return 'forum';
+    });
+    Route::get('/forum/create', function () {
+        return 'forum create';
+    });
+    Route::get('/forum/{id}', function ($id) {
+        return 'forum ' . $id;
+    });
+    Route::put('/forum/{id}', function ($id) {
+        return 'forum ' . $id;
+    });
+    Route::delete('/forum/{id}', function ($id) {
+        return 'forum ' . $id;
+    });
+});
