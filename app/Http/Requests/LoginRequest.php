@@ -26,24 +26,24 @@ class LoginRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'username' => 'required|string|max:255',
-            'password' => 'required|string|max:255|min:8',
+            'username' => 'bail|required|string|max:255',
+            'password' => 'bail|required|string|max:255|min:8',
         ];
     }
     public function messages(): array
     {
         return [
-            'required' => 'The :attribute field is required.',
-            'string' => 'The :attribute field must be a string.',
-            'max' => 'The :attribute field must be less than :max characters.',
-            'min' => 'The :attribute field must be at least :min characters.',
+            'required' => ':attribute không được để trống.',
+            'string' => ':attribute phải là chuỗi.',
+            'max' => ':attribute không được quá :max ký tự.',
+            'min' => ':attribute không được ít hơn :min ký tự.',
         ];
     }
     public function attributes(): array
     {
         return [
-            'username' => 'Username',
-            'password' => 'Password'
+            'username' => 'Tài khoản',
+            'password' => 'Mật khẩu'
         ];
     }
 }
