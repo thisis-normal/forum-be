@@ -13,8 +13,8 @@ class AuthController extends Controller
     public function register(RegisterRequest $request): JsonResponse
     {
         try {
-            $user = User::query()->create($request->validated());
-            return response()->json(['message' => 'User created successfully', 'user' => $user], 201);
+            User::query()->create($request->validated());
+            return response()->json(['message' => 'Đăng ký thành công'], 201);
         } catch (Exception $e) {
             return response()->json(['message' => $e->getMessage()], 500);
         }
@@ -25,10 +25,10 @@ class AuthController extends Controller
         try {
             $user = User::query()->where('username', $request['username'])->first();
             if (!$user || !password_verify($request['password'], $user->password)) {
-                return response()->json(['message' => 'Invalid credentials'], 401);
+                return response()->json(['message' => 'Sai tài khoản hoặc mật khẩu'], 401);
             }
             $token = $user->createToken('auth_token')->plainTextToken;
-            return response()->json(['message' => 'Login successful', 'token' => $token], 200);
+            return response()->json(['message' => 'Đăng nhập thành công', 'token' => $token], 200);
         } catch (Exception $e) {
             return response()->json(['message' => $e->getMessage()], 500);
         }
@@ -37,7 +37,7 @@ class AuthController extends Controller
     {
         try {
             auth()->user()->tokens()->delete();
-            return response()->json(['message' => 'Logged out'], 200);
+            return response()->json(['message' => 'Đăng xuất thành công'], 200);
         } catch (Exception $e) {
             return response()->json(['message' => $e->getMessage()], 500);
         }
