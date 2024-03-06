@@ -7,6 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class ForumGroup extends Model
 {
-    protected $table = 'forum_groups';
     use HasFactory;
+    protected $table = 'forum_groups';
+    protected $fillable = [
+        'name',
+        'description'
+    ];
 }

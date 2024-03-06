@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ForumGroupController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -24,20 +25,13 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
 });
-Route::group(['prefix' => 'forum-group'], function () {
-    Route::get('/forum', function () {
-        return 'forum';
-    });
-    Route::get('/forum/create', function () {
-        return 'forum create';
-    });
-    Route::get('/forum/{id}', function ($id) {
-        return 'forum ' . $id;
-    });
-    Route::put('/forum/{id}', function ($id) {
-        return 'forum ' . $id;
-    });
-    Route::delete('/forum/{id}', function ($id) {
-        return 'forum ' . $id;
-    });
+/**
+ * Route Prefixes for Forum Group
+ */
+Route::prefix('/forum-group')->group(function () {
+    Route::get('/', [ForumGroupController::class, 'index']);
+    Route::post('/', [ForumGroupController::class, 'store']);
+    Route::get('/{forumGroup}', [ForumGroupController::class, 'show']);
+    Route::put('/{forumGroup}', [ForumGroupController::class, 'update']);
+    Route::delete('/{id}', [ForumGroupController::class, 'destroy']);
 });
