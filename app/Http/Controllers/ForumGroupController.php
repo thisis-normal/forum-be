@@ -7,7 +7,6 @@ use App\Http\Requests\UpdateForumGroupRequest;
 use App\Models\ForumGroup;
 use Exception;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 
 class ForumGroupController extends Controller
 {
@@ -18,11 +17,15 @@ class ForumGroupController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(): JsonResponse
     {
-        //show all forum groups
-        $forumGroups = ForumGroup::all();
-        return response()->json($forumGroups);
+        //show all forum group
+        try {
+            $forumGroups = ForumGroup::query()->get();
+            return response()->json($forumGroups);
+        } catch (Exception $e) {
+            return response()->json(['message' => $e->getMessage()], 500);
+        }
     }
     /**
      * Store a newly created resource in storage.
@@ -41,9 +44,13 @@ class ForumGroupController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(ForumGroup $forumGroup)
+    public function show(ForumGroup $forumGroup): JsonResponse
     {
-        return response()->json($forumGroup);
+        try {
+            return response()->json($forumGroup);
+        } catch (Exception $e) {
+            return response()->json(['message' => $e->getMessage()], 500);
+        }
     }
 
     /**
@@ -56,7 +63,7 @@ class ForumGroupController extends Controller
         try {
             //update the forum group
             $forumGroup->update($request->validated());
-            return response()->json($forumGroup, 200);
+            return response()->json($forumGroup);
         } catch (Exception $e) {
             return response()->json(['message' => $e->getMessage()], 500);
         }
@@ -65,8 +72,16 @@ class ForumGroupController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(ForumGroup $forumGroup)
+    public function destroy($forumGroup): JsonResponse
     {
-        //
+        //check if the forum group exists
+        $forumGroup = ForumGroup::query()->find($forumGroup) ?? abort(404, 'Không tìm thấy nhóm forum');
+        try {
+            //delete the forum group
+            $forumGroup->delete();
+            return response()->json(['message' => 'Xóa nhóm forum thành công']);
+        } catch (Exception $e) {
+            return response()->json(['message' => $e->getMessage()], 500);
+        }
     }
 }

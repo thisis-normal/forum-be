@@ -30,8 +30,10 @@ Route::middleware('auth:sanctum')->group(function () {
  */
 Route::prefix('/forum-group')->group(function () {
     Route::get('/', [ForumGroupController::class, 'index']);
-    Route::post('/', [ForumGroupController::class, 'store']);
-    Route::get('/{forumGroup}', [ForumGroupController::class, 'show']);
-    Route::put('/{forumGroup}', [ForumGroupController::class, 'update']);
-    Route::delete('/{id}', [ForumGroupController::class, 'destroy']);
+    Route::middleware('auth:sanctum')->group(function () {
+        Route::post('/', [ForumGroupController::class, 'store']);
+        Route::get('/{forumGroup}', [ForumGroupController::class, 'show']);
+        Route::put('/{forumGroup}', [ForumGroupController::class, 'update']);
+        Route::delete('/{forumGroup}', [ForumGroupController::class, 'destroy']);
+    });
 });
