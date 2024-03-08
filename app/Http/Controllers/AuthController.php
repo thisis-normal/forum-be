@@ -24,11 +24,17 @@ class AuthController extends Controller
     {
         try {
             $user = User::query()->where('username', $request['username'])->first();
-            if (!$user || !password_verify($request['password'], $user->password)) {
-                return response()->json(['message' => 'Sai tài khoản hoặc mật khẩu'], 401);
+            if (!password_verify($request['password'], $user->password)) {
+                return response()->json(['message' => 'Sai mật khẩu'], 401);
             }
             $token = $user->createToken('auth_token')->plainTextToken;
-            return response()->json(['message' => 'Đăng nhập thành công', 'token' => $token], 200);
+            return response()->json(
+                [
+                    'message' => 'Đăng nhập thành công',
+                    'user' => $user,
+                    'token' => $token
+                ]
+            );
         } catch (Exception $e) {
             return response()->json(['message' => $e->getMessage()], 500);
         }

@@ -26,7 +26,7 @@ class LoginRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'username' => 'bail|required|string|max:255',
+            'username' => 'bail|required|string|max:255|exists:users,username',
             'password' => 'bail|required|string|max:255|min:8',
         ];
     }
@@ -37,6 +37,7 @@ class LoginRequest extends FormRequest
             'string' => ':attribute phải là chuỗi.',
             'max' => ':attribute không được quá :max ký tự.',
             'min' => ':attribute không được ít hơn :min ký tự.',
+            'exists' => ':attribute không tồn tại.'
         ];
     }
     public function attributes(): array
