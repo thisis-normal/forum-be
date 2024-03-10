@@ -2,10 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\AuthService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
+    public function __construct(AuthService $authService)
+    {
+        $this->middleware('auth:sanctum');
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -45,4 +53,18 @@ class UserController extends Controller
     {
         //
     }
+
+    //view image
+    public function viewImage(): JsonResponse
+    {
+        $user = Auth::user();
+        // Kiểm tra xem người dùng có vai trò 'admin' hoặc 'view-image' không
+        if ($user->roles()->whereIn('name', ['user', 'admin'])->exists()) {
+            $image = asset('defaultAvatar.png');
+            return response()->json(['image' => $image]);
+        }
+        return response()->json(['message' => 'Bạn không có quyền truy cập'], 403);
+    }
 }
+
+

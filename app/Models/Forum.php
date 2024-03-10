@@ -9,4 +9,13 @@ class Forum extends Model
 {
     protected $table = 'forums';
     use HasFactory;
+    protected $fillable = [
+        'forum_group_id',
+        'name',
+        'description',
+        'slug',
+        'user_id',
+        'created_at',
+        'updated_at'
+    ];
 }

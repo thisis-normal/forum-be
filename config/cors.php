@@ -15,20 +15,29 @@ return [
     |
     */
 
-    'paths' => ['api/*', 'sanctum/csrf-cookie'],
+//    'paths' => ['api/*', 'sanctum/csrf-cookie'],
+//
+//    'allowed_methods' => ['*'],
+//
+//    'allowed_origins' => ['*'],
+//
+//    'allowed_origins_patterns' => [],
+//
+//    'allowed_headers' => ['*'],
+//
+//    'exposed_headers' => [],
+//
+//    'max_age' => 0,
+//
+//    'supports_credentials' => false,
 
-    'allowed_methods' => ['*'],
-
-    'allowed_origins' => ['*'],
-
+    'paths' => ['api/*'],
+    'allowed_methods' => ['POST', 'GET', 'DELETE', 'PUT', 'PATCH'], // Các phương thức HTTP được phép
+    'allowed_origins' => [env('FRONTEND_URL')],
     'allowed_origins_patterns' => [],
-
-    'allowed_headers' => ['*'],
-
+    'allowed_headers' => ['Content-Type', 'X-Response-Type', 'Authorization', 'Accept'],
     'exposed_headers' => [],
-
     'max_age' => 0,
-
-    'supports_credentials' => false,
+    'supports_credentials' => false, // Nếu bạn muốn sử dụng cookies hoặc authentication schemes như là OAuth, thì set giá trị này thành true
 
 ];

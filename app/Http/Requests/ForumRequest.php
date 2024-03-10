@@ -5,13 +5,8 @@ namespace App\Http\Requests;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
-class RegisterRequest extends FormRequest
+class ForumRequest extends FormRequest
 {
-    public string $username;
-    public string $email;
-    public string $password;
-    public string $full_name;
-
     /**
      * Determine if the user is authorized to make this request.
      */
@@ -28,10 +23,11 @@ class RegisterRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'username' => 'bail|required|string|max:255|unique:users,username',
-            'email' => 'bail|required|email|unique:users,email',
-            'password' => 'bail|required|string|max:255|min:8',
-            'full_name' => 'bail|required|string|max:255'
+            'forum_group_id' => ['required', 'integer','exists:forum_groups,id'],
+            'name' => ['required', 'string', 'max:255'],
+            'description' => ['required', 'string', 'max:255'],
+            'slug' => ['required', 'string', 'max:255'],
+            'user_id' => ['required', 'integer', 'exists:users,id']
         ];
     }
     public function messages(): array
@@ -40,19 +36,18 @@ class RegisterRequest extends FormRequest
             'required' => ':attribute không được để trống.',
             'string' => ':attribute phải là chuỗi.',
             'max' => ':attribute không được quá :max ký tự.',
-            'min' => ':attribute không được ít hơn :min ký tự.',
-            'unique' => ':attribute đã tồn tại.',
-            'email' => ':attribute không đúng định dạng.'
+            'integer' => ':attribute phải là số nguyên.',
+            'exists' => ':attribute không tồn tại.'
         ];
     }
-    //return error for api request
     public function attributes(): array
     {
         return [
-            'username' => 'Tài khoản',
-            'email' => 'Email',
-            'password' => 'Mật khẩu',
-            'full_name' => 'Họ và tên',
+            'forum_group_id' => 'Nhóm forum',
+            'name' => 'Tên forum',
+            'description' => 'Mô tả',
+            'slug' => 'Slug',
+            'user_id' => 'Người dùng'
         ];
     }
 }
