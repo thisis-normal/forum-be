@@ -55,8 +55,10 @@ class UserController extends Controller
     }
 
     //view image
-    public function viewImage(): JsonResponse
+    public function viewImage(Request $request): JsonResponse
     {
+        dd($request->user()->tokenCan('client'));
+        dd($request->user()->id);
         $user = Auth::user();
         // Kiểm tra xem người dùng có vai trò 'admin' hoặc 'view-image' không
         if ($user->roles()->whereIn('name', ['user', 'admin'])->exists()) {
