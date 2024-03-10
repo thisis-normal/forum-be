@@ -43,7 +43,7 @@ class AuthController extends Controller
             if (!$isClient) {
                 return response()->json(['message' => 'Bạn không có quyền truy cập'], 403);
             }
-            $token = $user->createToken('client_access_token', ['client'])->plainTextToken;
+            $token = $user->createToken('user_access_token', ['user'])->plainTextToken;
             return response()->json(
                 [
                     'message' => 'Đăng nhập thành công',

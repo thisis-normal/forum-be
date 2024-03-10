@@ -13,4 +13,9 @@ class ForumGroup extends Model
         'name',
         'description'
     ];
+    public function forums()
+    {
+        return $this->hasMany(Forum::class);
+    }
+
 }

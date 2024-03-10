@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ForumController;
 use App\Http\Controllers\ForumGroupController;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -28,7 +29,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
 });
 Route::get('/viewImage', [UserController::class, 'viewImage'])
-    ->middleware('auth:sanctum', 'ability:client,view-image');
+    ->middleware('auth:sanctum', 'ability:user,view-image');
 /**
  * Route Prefixes for Forum Group
  */
@@ -51,4 +52,12 @@ Route::prefix('/forum')->group(function () {
         Route::put('/{forum}', [ForumController::class, 'update']);
         Route::delete('/{forum}', [ForumController::class, 'destroy']);
     });
+});
+/**
+ * Route Prefixes for client homepage
+ */
+Route::prefix('/home')->group(function () {
+    Route::get('/forum-list', [HomeController::class, 'forumList']);
+    Route::get('/latest-thread', [HomeController::class, 'latestThread']);
+    Route::get('/latest-post', [HomeController::class, 'latestPost']);
 });

@@ -18,4 +18,8 @@ class Forum extends Model
         'created_at',
         'updated_at'
     ];
+    public function forumGroup()
+    {
+        return $this->belongsTo(ForumGroup::class);
+    }
 }
