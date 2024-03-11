@@ -9,7 +9,6 @@ use App\Models\User;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use App\Services\AuthService;
-use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
@@ -24,7 +23,7 @@ class AuthController extends Controller
         try {
             $user = User::query()->create($request->validated());
             // Bạn có thể đặt một quyền mặc định cho người dùng mới, ví dụ như 'user'
-            $defaultRole = Role::where('name', 'admin')->first(); // 'user' là tên của quyền mặc định
+            $defaultRole = Role::query()->where('name', 'user')->first();
             $user->roles()->attach($defaultRole);
             return response()->json(['message' => 'Đăng ký thành công'], 201);
         } catch (Exception $e) {
