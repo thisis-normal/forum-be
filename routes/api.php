@@ -35,9 +35,9 @@ Route::get('/viewImage', [UserController::class, 'viewImage'])
  */
 Route::prefix('/forum-group')->group(function () {
     Route::get('/', [ForumGroupController::class, 'index']);
+    Route::get('/{forumGroup}', [ForumGroupController::class, 'show']);
     Route::middleware('auth:sanctum')->group(function () {
         Route::post('/', [ForumGroupController::class, 'store']);
-        Route::get('/{forumGroup}', [ForumGroupController::class, 'show']);
         Route::put('/{forumGroup}', [ForumGroupController::class, 'update']);
         Route::delete('/{forumGroup}', [ForumGroupController::class, 'destroy']);
     });
@@ -47,6 +47,7 @@ Route::prefix('/forum-group')->group(function () {
  */
 Route::prefix('/forum')->group(function () {
     Route::get('/', [ForumController::class, 'index']);
+    Route::get('/{forumGroup}', [ForumController::class, 'show']);
     Route::middleware('auth:sanctum')->group(function () {
         Route::post('/', [ForumController::class, 'store']);
         Route::put('/{forum}', [ForumController::class, 'update']);

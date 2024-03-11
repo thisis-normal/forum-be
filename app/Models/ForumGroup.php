@@ -17,5 +17,4 @@ class ForumGroup extends Model
     {
         return $this->hasMany(Forum::class);
     }
-
 }

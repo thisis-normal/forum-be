@@ -40,14 +40,14 @@ class ForumGroupController extends Controller
             return response()->json(['message' => $e->getMessage()], 500);
         }
     }
-
     /**
-     * Display the specified resource.
+     * Display a listing of the forum based on forum group id.
      */
     public function show(ForumGroup $forumGroup): JsonResponse
     {
         try {
-            return response()->json($forumGroup);
+            $forumList = $forumGroup->load('forums');
+            return response()->json($forumList);
         } catch (Exception $e) {
             return response()->json(['message' => $e->getMessage()], 500);
         }
