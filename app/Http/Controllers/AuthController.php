@@ -4,10 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
+use App\Models\Role;
 use App\Models\User;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use App\Services\AuthService;
+use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
@@ -20,7 +22,10 @@ class AuthController extends Controller
     public function register(RegisterRequest $request): JsonResponse
     {
         try {
-            User::query()->create($request->validated());
+            $user = User::query()->create($request->validated());
+            // Bạn có thể đặt một quyền mặc định cho người dùng mới, ví dụ như 'user'
+            $defaultRole = Role::where('name', 'admin')->first(); // 'user' là tên của quyền mặc định
+            $user->roles()->attach($defaultRole);
             return response()->json(['message' => 'Đăng ký thành công'], 201);
         } catch (Exception $e) {
             return response()->json(['message' => $e->getMessage()], 500);
@@ -38,9 +43,7 @@ class AuthController extends Controller
             if ($user->banned) {
                 return response()->json(['message' => 'Tài khoản của bạn đã bị khóa'], 403);
             }
-            //check role
-            $isClient = $this->authService->getRoleByUserId($user->id)->where('name', 'user') ->exists();
-            if (!$isClient) {
+            if (!$user->hasRole('user')) {
                 return response()->json(['message' => 'Bạn không có quyền truy cập'], 403);
             }
             $token = $user->createToken('user_access_token', ['user'])->plainTextToken;

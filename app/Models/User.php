@@ -52,6 +52,13 @@ class User extends Authenticatable
 
     public function roles(): BelongsToMany
     {
-        return $this->belongsToMany(Role::class, 'lnk_user_role', 'user_id', 'role_id');
+        return $this->belongsToMany(Role::class, 'lnk_user_role', 'user_id', 'role_id')->withTimestamps();
     }
+    // AppModelsUser.php
+
+    public function hasRole($role)
+    {
+        return $this->roles()->where('name', $role)->exists(); // 'name' là cột bạn dùng để định danh role
+    }
+
 }
