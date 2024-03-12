@@ -2,9 +2,13 @@
 
 namespace App\Exceptions;
 
+use Exception;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Response;
 use Throwable;
-
 class Handler extends ExceptionHandler
 {
     /**
@@ -26,5 +30,17 @@ class Handler extends ExceptionHandler
         $this->reportable(function (Throwable $e) {
             //
         });
+    }
+    public function render($request, Exception|Throwable $e): Response|JsonResponse|RedirectResponse|\Symfony\Component\HttpFoundation\Response
+    {
+        // Kiểm tra nếu đây là một instance của ModelNotFoundException
+        if ($e instanceof ModelNotFoundException) {
+            // Tùy chỉnh thông điệp lỗi và mã phản hồi
+            return response()->json([
+                'error' => 'Không tìm thấy tài nguyên yêu cầu'
+            ], 404);
+        }
+        // Nếu không, để xử lý ngoại lệ như bình thường
+        return parent::render($request, $e);
     }
 }

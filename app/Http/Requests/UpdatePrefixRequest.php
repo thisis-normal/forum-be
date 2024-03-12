@@ -2,12 +2,12 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Prefix;
 use Illuminate\Contracts\Validation\ValidationRule;
-use Illuminate\Database\Query\Builder;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class UpdateForumGroupRequest extends FormRequest
+class UpdatePrefixRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,18 +24,16 @@ class UpdateForumGroupRequest extends FormRequest
      */
     public function rules(): array
     {
-        //get id from url
-        $id = intval($this->route('forumGroup'));
         return [
             'name' => [
                 'bail',
                 'required',
                 'string',
                 'max:255',
-                Rule::unique('forum_groups', 'name')->ignore($id)
+                Rule::unique(Prefix::class, 'name')->ignore($this->route('prefix'))
             ],
             'description' => 'bail|required|string|max:255',
-            'icon_name' => 'bail|nullable|string|max:255'
+            'color' => 'bail|required|string|max:255'
         ];
     }
     public function messages(): array
@@ -52,9 +50,9 @@ class UpdateForumGroupRequest extends FormRequest
     {
         return [
             'id' => 'ID',
-            'name' => 'Nhóm forum',
+            'name' => 'Tên prefix',
             'description' => 'Mô tả',
-            'icon_name' => 'Tên icon'
+            'color' => 'Màu sắc'
         ];
     }
 }

@@ -8,5 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 class Prefix extends Model
 {
     use HasFactory;
+
     protected $table = 'prefixes';
+    protected $fillable = [
+        'name',
+        'description',
+        'color'
+    ];
 }

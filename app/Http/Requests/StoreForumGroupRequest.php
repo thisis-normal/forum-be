@@ -24,7 +24,8 @@ class StoreForumGroupRequest extends FormRequest
     {
         return [
             'name' => 'bail|required|string|max:255|unique:forum_groups,name',
-            'description' => 'bail|required|string|max:255'
+            'description' => 'bail|required|string|max:255',
+            'icon_name' => 'bail|nullable|string|max:255'
         ];
     }
     public function messages(): array
@@ -40,7 +41,8 @@ class StoreForumGroupRequest extends FormRequest
     {
         return [
             'name' => 'Nhóm forum',
-            'description' => 'Mô tả'
+            'description' => 'Mô tả',
+            'icon_name' => 'Tên icon'
         ];
     }
 }

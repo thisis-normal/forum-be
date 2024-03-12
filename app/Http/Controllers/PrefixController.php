@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StorePrefixRequest;
+use App\Http\Requests\UpdatePrefixRequest;
 use App\Models\Prefix;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class PrefixController extends Controller
@@ -10,56 +13,41 @@ class PrefixController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(): JsonResponse
     {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
+         return response()->json(Prefix::all());
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StorePrefixRequest $request): JsonResponse
     {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(Prefix $prefix)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Prefix $prefix)
-    {
-        //
+        //create a new prefix
+        $prefix = Prefix::query()->create($request->validated());
+        return response()->json($prefix, 201);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Prefix $prefix)
+    public function update(UpdatePrefixRequest $request, Prefix $prefix): JsonResponse
     {
-        //
+        //update the prefix
+        $prefix->update($request->validated());
+        return response()->json($prefix);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Prefix $prefix)
+    public function destroy(Prefix $prefix): JsonResponse
     {
-        //
+        try {
+            $prefix->delete();
+            return response()->json(['message' => 'Xoá prefix thành công']);
+        } catch (\Exception $e) {
+            return response()->json(['message' => $e->getMessage()], 500);
+        }
     }
 }

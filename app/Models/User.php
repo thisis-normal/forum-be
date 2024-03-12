@@ -11,6 +11,9 @@ use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
+    protected $appends = ['avatar'];
+    private string $avatar_path = '';
+
     /**
      * The attributes that are mass assignable.
      *
@@ -39,7 +42,6 @@ class User extends Authenticatable
         'password',
         'remember_token',
     ];
-
     /**
      * The attributes that should be cast.
      *
@@ -59,6 +61,10 @@ class User extends Authenticatable
     public function hasRole($role)
     {
         return $this->roles()->where('name', $role)->exists(); // 'name' là cột bạn dùng để định danh role
+    }
+    public function getAvatarAttribute()
+    {
+        return $this->avatar_path ? asset($this->avatar_path) : asset('defaultAvatar.png');
     }
 
 }

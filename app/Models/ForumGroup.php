@@ -11,7 +11,8 @@ class ForumGroup extends Model
     protected $table = 'forum_groups';
     protected $fillable = [
         'name',
-        'description'
+        'description',
+        'icon_name'
     ];
     public function forums()
     {
