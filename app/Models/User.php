@@ -58,13 +58,12 @@ class User extends Authenticatable
     }
     // AppModelsUser.php
 
-    public function hasRole($role)
+    public function hasRole($role): bool
     {
-        return $this->roles()->where('name', $role)->exists(); // 'name' là cột bạn dùng để định danh role
+        return $this->roles()->where('name', $role)->exists();
     }
-    public function getAvatarAttribute()
+    public function getAvatarAttribute(): string
     {
         return $this->avatar_path ? asset($this->avatar_path) : asset('defaultAvatar.png');
     }
-
 }

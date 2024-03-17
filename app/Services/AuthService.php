@@ -12,6 +12,7 @@ class AuthService
     {
         return User::query()
             ->where('username', $request['username'])
+            ->get(['id', 'username','full_name', 'password', 'banned'])
             ->firstOrFail();
     }
 }

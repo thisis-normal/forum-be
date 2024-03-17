@@ -36,9 +36,16 @@ class HomeController extends Controller
         $latestThreadsInformation = $this->homeService->getInformationOfLatestThreads($subQuery);
         return response()->json($latestThreadsInformation);
     }
-    public function latestPosts()
+    public function latestUsers(): JsonResponse
     {
-        //get  5 latest posts
+        //get  5 latest users
+        $latestUsers = $this->homeService->getLatestUsers(5);
+        return response()->json($latestUsers);
     }
-
+    public function forumStatistics(): JsonResponse
+    {
+        //get sum of thread, post and user
+        $forumStatistics = $this->homeService->getForumStatistics();
+        return response()->json($forumStatistics);
+    }
 }

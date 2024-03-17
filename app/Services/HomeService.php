@@ -3,6 +3,7 @@ namespace App\Services;
 
 use App\Models\Post;
 use App\Models\Thread;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
@@ -24,8 +25,22 @@ class HomeService {
                 $join->on('threads.id', '=', 'posts.thread_id')
                     ->on('posts.created_at', '=', 'sub.recent_post');
             })
+            ->join('prefixes', 'threads.prefix_id', '=', 'prefixes.id')
             ->join('users', 'posts.user_id', '=', 'users.id')
             ->orderBy('posts.created_at', 'desc')
-            ->get(['threads.id as thread_id','threads.title as thread_name', 'users.id as user_id', 'users.full_name as user_full_name', 'posts.created_at']);
+            ->get(['prefixes.name as prefixes_name','threads.id as thread_id','threads.title as thread_name', 'users.id as user_id', 'users.full_name as user_full_name', 'posts.created_at']);
+    }
+    public function getLatestUsers(int $limit): Collection
+    {
+        return User::query()->orderBy('created_at', 'desc')->limit($limit)->get(['full_name', 'created_at']);
+    }
+
+    public function getForumStatistics(): array
+    {
+        return [
+            'thread_count' => Thread::query()->count(),
+            'post_count' => Post::query()->count(),
+            'user_count' => User::query()->count()
+        ];
     }
 }

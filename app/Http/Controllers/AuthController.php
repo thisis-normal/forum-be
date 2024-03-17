@@ -64,4 +64,8 @@ class AuthController extends Controller
         $user->tokens()->delete();
         return response()->json(['message' => 'Đăng xuất thành công']);
     }
+    public function me(): JsonResponse
+    {
+        return response()->json(auth()->user());
+    }
 }
