@@ -22,7 +22,8 @@ class HomeController extends Controller
         $forumGroups = ForumGroup::with('forums')->get();
         $data = $forumGroups->map(function ($forumGroup) {
             return [
-                'root' => $forumGroup->name,
+                'forum_group' => $forumGroup->name,
+                'icon_name' => $forumGroup->icon_name,
                 'children' => $forumGroup->forums
             ];
         });
