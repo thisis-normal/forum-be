@@ -22,9 +22,10 @@ class HomeController extends Controller
         $forumGroups = ForumGroup::with('forums')->get();
         $data = $forumGroups->map(function ($forumGroup) {
             return [
+                'forum_group_id' => $forumGroup->id,
                 'forum_group' => $forumGroup->name,
                 'icon_name' => $forumGroup->icon_name,
-                'children' => $forumGroup->forums
+                'children' => $forumGroup->forums->makeHidden('forum_group_id')
             ];
         });
         return response()->json($data);
