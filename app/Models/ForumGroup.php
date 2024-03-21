@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class ForumGroup extends Model
 {
     use HasFactory;
+
     protected $table = 'forum_groups';
     protected $fillable = [
         'name',

@@ -7,14 +7,17 @@ use App\Models\Forum;
 use App\Services\ForumService;
 use Exception;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Auth;
 
 class ForumController extends Controller
 {
     protected ForumService $forumService;
+
     public function __construct()
     {
         $this->forumService = new ForumService();
     }
+
     /**
      * Display a listing of the resource.
      */
@@ -28,12 +31,19 @@ class ForumController extends Controller
             return response()->json(['message' => $e->getMessage()], 500);
         }
     }
+
     /**
      * Store a newly created resource in storage.
      */
     public function store(ForumRequest $request): JsonResponse
     {
         try {
+            $userID = Auth::id();
+        } catch (Exception $e) {
+            return response()->json(['message' => $e->getMessage()], 500);
+        }
+        try {
+            $request->merge(['user_id' => $userID]);
             //create a new forum with user id also
             $forum = Forum::query()->create($request->validated());
             return response()->json($forum, 201);
@@ -41,6 +51,7 @@ class ForumController extends Controller
             return response()->json(['message' => $e->getMessage()], 500);
         }
     }
+
     /**
      * Update the specified resource in storage.
      */

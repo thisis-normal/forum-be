@@ -13,13 +13,28 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
-
+/**
+ * API Route for User Authentication
+ */
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/me', [AuthController::class, 'me']);
     Route::post('/logout', [AuthController::class, 'logout']);
 });
+/**
+ * API Route for Admin Authentication
+ */
+Route::prefix('/admin')->group(function () {
+    Route::post('/register', [AuthController::class, 'adminRegister']);
+    Route::post('/login', [AuthController::class, 'adminLogin']);
+    Route::middleware('auth:sanctum')->group(function () {
+        Route::get('/me', [AuthController::class, 'me']);
+        Route::post('/logout', [AuthController::class, 'logout']);
+    });
+});
+
+
 Route::get('/viewImage', [UserController::class, 'viewImage'])
     ->middleware('auth:sanctum', 'ability:user,view-image');
 
