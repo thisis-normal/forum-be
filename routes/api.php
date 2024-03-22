@@ -13,7 +13,9 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
-
+/**
+ * Route Prefixes for Client's Auth
+ */
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::middleware('auth:sanctum')->group(function () {
@@ -23,6 +25,18 @@ Route::middleware('auth:sanctum')->group(function () {
 Route::get('/viewImage', [UserController::class, 'viewImage'])
     ->middleware('auth:sanctum', 'ability:user,view-image');
 
+/**
+* Route Prefixes for Admin Auth
+*/
+
+Route::prefix('/admin')->group(function () {
+    Route::post('/register', [AuthController::class, 'adminRegister']);
+    Route::post('/login', [AuthController::class, 'adminLogin']);
+    Route::middleware('auth:sanctum')->group(function () {
+        Route::get('/me', [AuthController::class, 'me']);
+        Route::post('/logout', [AuthController::class, 'logout']);
+    });
+});
 /**
  * Route Prefixes for client homepage
  */
@@ -52,6 +66,7 @@ Route::prefix('/forum-group')->group(function () {
  */
 Route::prefix('/forum')->group(function () {
     Route::get('/', [ForumController::class, 'index']);
+    Route::get('/{forum}', [ForumController::class, 'show']);
     Route::middleware('auth:sanctum')->group(function () {
         Route::post('/', [ForumController::class, 'store']);
         Route::put('/{forum}', [ForumController::class, 'update']);

@@ -11,10 +11,12 @@ use Illuminate\Http\JsonResponse;
 class ForumController extends Controller
 {
     protected ForumService $forumService;
+
     public function __construct()
     {
         $this->forumService = new ForumService();
     }
+
     /**
      * Display a listing of the resource.
      */
@@ -28,6 +30,21 @@ class ForumController extends Controller
             return response()->json(['message' => $e->getMessage()], 500);
         }
     }
+
+    /**
+     * Display the specified resource.
+     */
+    public function show($forumID): JsonResponse
+    {
+        // Find the forum with the given id or abort if not found
+        $forum = Forum::with('threads.prefix')->find($forumID) ?? abort(404, 'Không tìm thấy nhóm forum');
+        // Hide attributes in the Forum
+        $forum->load('threads')->makeHidden('user_id', 'created_at', 'updated_at', 'forum_group_id');
+        //convert to array to remove thread's property
+        $forum = $forum->toArray();
+        return response()->json($forum);
+    }
+
     /**
      * Store a newly created resource in storage.
      */
@@ -41,6 +58,7 @@ class ForumController extends Controller
             return response()->json(['message' => $e->getMessage()], 500);
         }
     }
+
     /**
      * Update the specified resource in storage.
      */
