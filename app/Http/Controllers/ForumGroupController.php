@@ -47,7 +47,14 @@ class ForumGroupController extends Controller
     {
         try {
             $forumList = $forumGroup->load('forums');
-            return response()->json($forumList);
+            //hide the forum_group_id from the forum list
+            $forum = $forumList->forums->transform(function ($forum) {
+                return $forum->makeHidden('forum_group_id', 'created_at', 'updated_at');
+            });
+            // Manually build up the structure you want to return
+            $forumGroupArray = $forumList->toArray();
+            $forumGroupArray['forums'] = $forum;
+            return response()->json($forumGroupArray);
         } catch (Exception $e) {
             return response()->json(['message' => $e->getMessage()], 500);
         }

@@ -27,7 +27,7 @@ class ForumRequest extends FormRequest
             'name' => ['required', 'string', 'max:255'],
             'description' => ['required', 'string', 'max:255'],
             'slug' => ['required', 'string', 'max:255'],
-            'user_id' => ['required', 'integer', 'exists:users,id']
+//            'user_id' => ['required', 'integer', 'exists:users,id']
         ];
     }
     public function messages(): array
@@ -47,7 +47,7 @@ class ForumRequest extends FormRequest
             'name' => 'Tên forum',
             'description' => 'Mô tả',
             'slug' => 'Slug',
-            'user_id' => 'Người dùng'
+//            'user_id' => 'Người dùng'
         ];
     }
 }
