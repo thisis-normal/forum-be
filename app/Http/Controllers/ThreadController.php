@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreThreadRequest;
+use App\Http\Requests\UpdateThreadRequest;
 use App\Models\Thread;
 use App\Services\ImageService;
 use Illuminate\Http\JsonResponse;
@@ -17,6 +18,7 @@ class ThreadController extends Controller
     {
         $this->imageService = $imageService;
     }
+
     /**
      * Display a listing of the resource.
      */
@@ -42,13 +44,15 @@ class ThreadController extends Controller
         try {
             $thread = Thread::query()->create($validatedData);
         } catch (\Exception $e) {
-            return response()->json(['message' => 'Lỗi khi lưu chủ đề: ' . $e->getMessage()], 500);
+            return response()->json(['message' => 'Lỗi khi lưu chủ đề: '.$e->getMessage()], 500);
         }
-        //save image
-        try {
-            $this->imageService->saveImages($request->file('image'), $thread);
-        } catch (\Exception $e) {
-            return response()->json(['message' => 'Lỗi khi lưu ảnh: ' . $e->getMessage()], 500);
+        if ($request->hasFile('image')) {
+            //save image
+            try {
+                $this->imageService->saveImages($request->file('image'), $thread);
+            } catch (\Exception $e) {
+                return response()->json(['message' => 'Lỗi khi lưu ảnh: '.$e->getMessage()], 500);
+            }
         }
         return response()->json([
             'message' => 'Thread đã được tạo',
@@ -59,11 +63,13 @@ class ThreadController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Thread $thread, int $page = 1): JsonResponse
+    public function showThread(Thread $thread): JsonResponse
     {
-        $thread->load(['images' => function ($query) {
-            $query->select(['id', 'path', 'imageable_id', 'imageable_type']);
-        }]);
+        $thread->load([
+            'images' => function ($query) {
+                $query->select(['id', 'path', 'imageable_id', 'imageable_type']);
+            }
+        ]);
         $thread = $this->imageService->removePathString($thread);
         return response()->json($thread);
     }
@@ -71,9 +77,9 @@ class ThreadController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Thread $thread)
+    public function update(UpdateThreadRequest $request, Thread $thread)
     {
-        //
+        dd($request->validated());
     }
 
     /**

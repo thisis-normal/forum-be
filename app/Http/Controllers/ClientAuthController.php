@@ -10,7 +10,7 @@ use Exception;
 use Illuminate\Http\JsonResponse;
 use App\Services\AuthService;
 
-class AuthController extends Controller
+class ClientAuthController extends Controller
 {
     private AuthService $authService;
 

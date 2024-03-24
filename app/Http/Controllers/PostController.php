@@ -2,17 +2,32 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ListPostRequest;
+use App\Http\Requests\StorePostRequest;
+use App\Http\Resources\PostResource;
 use App\Models\Post;
+use App\Models\Thread;
+use App\Services\PostService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class PostController extends Controller
 {
+    private PostService $postService;
+
+    public function __construct(PostService $postService)
+    {
+        $this->postService = $postService;
+    }
+
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Thread $thread, Request $request): JsonResponse
     {
-        //
+        $page = $request->query('page', 1);
+        $posts = $this->postService->getPosts($thread, $page);
+        return PostResource::collection($posts)->response();
     }
 
     /**
@@ -26,11 +41,11 @@ class PostController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StorePostRequest $request): JsonResponse
     {
-        //
+        $post = $this->postService->createPost($request->validated());
+        return PostResource::make($post)->response();
     }
-
     /**
      * Display the specified resource.
      */

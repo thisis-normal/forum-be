@@ -1,9 +1,11 @@
 <?php
 
-use App\Http\Controllers\AuthController;
+use App\Http\Controllers\AdminAuthController;
+use App\Http\Controllers\ClientAuthController;
 use App\Http\Controllers\ForumController;
 use App\Http\Controllers\ForumGroupController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\PostController;
 use App\Http\Controllers\PrefixController;
 use App\Http\Controllers\ThreadController;
 use App\Http\Controllers\UserController;
@@ -16,21 +18,22 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 /**
  * API Route for User Authentication
  */
-Route::post('/register', [AuthController::class, 'register']);
-Route::post('/login', [AuthController::class, 'login']);
+Route::post('/register', [ClientAuthController::class, 'register']);
+Route::post('/login', [ClientAuthController::class, 'login']);
 Route::middleware('auth:sanctum')->group(function () {
-    Route::get('/me', [AuthController::class, 'me']);
-    Route::post('/logout', [AuthController::class, 'logout']);
+    Route::get('/me', [ClientAuthController::class, 'me']);
+    Route::post('/logout', [ClientAuthController::class, 'logout']);
 });
+
 /**
- * API Route for Admin Authentication
+ * Route Prefixes for Admin Authentication
  */
 Route::prefix('/admin')->group(function () {
-    Route::post('/register', [AuthController::class, 'adminRegister']);
-    Route::post('/login', [AuthController::class, 'adminLogin']);
+    Route::post('/login', [AdminAuthController::class, 'login']);
     Route::middleware('auth:sanctum')->group(function () {
-        Route::get('/me', [AuthController::class, 'me']);
-        Route::post('/logout', [AuthController::class, 'logout']);
+        Route::post('/register', [AdminAuthController::class, 'register']);
+        Route::get('/me', [AdminAuthController::class, 'me']);
+        Route::post('/logout', [AdminAuthController::class, 'logout']);
     });
 });
 
@@ -38,18 +41,7 @@ Route::prefix('/admin')->group(function () {
 Route::get('/viewImage', [UserController::class, 'viewImage'])
     ->middleware('auth:sanctum', 'ability:user,view-image');
 
-/**
-* Route Prefixes for Admin Auth
-*/
 
-Route::prefix('/admin')->group(function () {
-    Route::post('/register', [AuthController::class, 'adminRegister']);
-    Route::post('/login', [AuthController::class, 'adminLogin']);
-    Route::middleware('auth:sanctum')->group(function () {
-        Route::get('/me', [AuthController::class, 'me']);
-        Route::post('/logout', [AuthController::class, 'logout']);
-    });
-});
 /**
  * Route Prefixes for client homepage
  */
@@ -91,20 +83,32 @@ Route::prefix('/forum')->group(function () {
  * Route Prefixes for Prefix
  */
 Route::prefix('/prefix')->group(function () {
-    Route::get('/',[PrefixController::class,'index']);
-    Route::post('/',[PrefixController::class,'store']);
-    Route::put('/{prefix}',[PrefixController::class,'update']);
-    Route::delete('/{prefix}',[PrefixController::class,'destroy']);
+    Route::get('/', [PrefixController::class, 'index']);
+    Route::post('/', [PrefixController::class, 'store']);
+    Route::put('/{prefix}', [PrefixController::class, 'update']);
+    Route::delete('/{prefix}', [PrefixController::class, 'destroy']);
 });
 
 /**
  * Route Prefixes for Thread
  */
 Route::prefix('/thread')->group(function () {
-    Route::get('/',[ThreadController::class,'index']);
-    Route::post('/',[ThreadController::class,'store']);
-    Route::get('/{thread}/{page?}',[ThreadController::class,'show'])
-        ->where('page','[0-9]+');
-    Route::put('/{thread}',[ThreadController::class,'update']);
-    Route::delete('/{thread}',[ThreadController::class,'destroy']);
+    Route::get('/{thread}/posts', [PostController::class, 'index'])
+        ->where('page', '[0-9]+')->where('thread', '[0-9]+');
+    Route::get('/{thread}', [ThreadController::class, 'showThread']);
+    Route::middleware('auth:sanctum')->group(function () {
+        Route::post('/', [ThreadController::class, 'store']);
+        Route::put('/{thread}', [ThreadController::class, 'update']);
+        Route::delete('/{thread}', [ThreadController::class, 'destroy']);
+    });
+});
+/**
+ * Route Prefixes for Post
+ */
+Route::prefix('/post')->group(function () {
+    Route::middleware('auth:sanctum')->group(function () {
+        Route::post('/', [PostController::class, 'store']);
+        Route::put('/{post}', [PostController::class, 'update']);
+        Route::delete('/{post}', [PostController::class, 'destroy']);
+    });
 });

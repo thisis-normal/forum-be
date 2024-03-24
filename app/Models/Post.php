@@ -23,4 +23,9 @@ class Post extends Model
     {
         return $this->morphMany(Image::class, 'imageable');
     }
+    public function repliedTo(): BelongsTo
+    {
+        return $this->belongsTo(Post::class, 'replied_to');
+    }
+
 }

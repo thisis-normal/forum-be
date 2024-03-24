@@ -42,7 +42,7 @@ class ForumController extends Controller
         // Find the forum with the given id or abort if not found
         $forum = Forum::with('threads.prefix')->find($forumID) ?? abort(404, 'Không tìm thấy nhóm forum');
         // Hide attributes in the Forum
-        $forum->load('threads')->makeHidden('user_id', 'created_at', 'updated_at', 'forum_group_id');
+        $forum->load('threads')->makeHidden('user_id', 'updated_at', 'forum_group_id');
         //convert to array to remove thread's property
         $forum = $forum->toArray();
         return response()->json($forum);
